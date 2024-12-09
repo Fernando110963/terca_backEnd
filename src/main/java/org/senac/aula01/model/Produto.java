@@ -1,67 +1,54 @@
 package org.senac.aula01.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import org.springframework.data.annotation.Id;
 
-@Entity
 public class Produto {
-    
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
-
-    @Column(nullable = false, length = 100)
+    private int id;
     private String nome;
-
-    @Column(name = "description", length = 255)
     private String descricao;
+    private double preco;
+    private String imagemString;
 
-    private Double preco;
 
-    private String imagemURL;
-
-    public Integer getId() {
+    public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNome() {
         return nome;
     }
 
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public Double getPreco() {
-        return preco;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getDescricao() {
+        return descricao;
     }
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
 
-    public void setPreco(Double preco) {
+    public double getPreco() {
+        return preco;
+    }
+
+    public void setPreco(double preco) {
         this.preco = preco;
     }
-    
-    public String getImagemURL() {
-        return imagemURL;
+
+    public String getImagemString() {
+        return imagemString;
     }
 
-    public void setImagemURL(String imagemURL) {
-        this.imagemURL = imagemURL;
+    public void setImagemString(String imagemString) {
+        this.imagemString = imagemString;
     }
-    
-
 }

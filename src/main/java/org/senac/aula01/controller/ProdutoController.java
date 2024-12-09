@@ -8,30 +8,46 @@ import java.util.List;
 
 import org.senac.aula01.model.Produto;
 import org.senac.aula01.respository.ProdutoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
+
+import java.util.Comparator;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/produto")
+@CrossOrigin("*")
 public class ProdutoController {
 
-    @Autowired
-    private ProdutoRepository repository;
+    private final ProdutoRepository produtoRepository;
+
+    public ProdutoController(ProdutoRepository produtoRepository) {
+        this.produtoRepository = produtoRepository;
+    }
 
     @GetMapping
-    public List<Produto> get(@RequestParam(required = false, defaultValue = "nome") String order) {
-        Sort s = Sort.by(order);
-        return repository.findAll(s);
-    }    
+    public List<Produto> get(
+            @RequestParam(value = "sortBy", defaultValue = "name") String sortBy,
+            @RequestParam(value = "order", defaultValue = "asc") String order
+    ) {
+        List<Produto> produtos = produtoRepository.findAll();
 
-    @PostMapping
-    public Produto save(@RequestBody Produto produto) {
-        return repository.save(produto);
+        Comparator<Produto> comparator;
+        switch (sortBy.toLowerCase()) {
+            case "value":
+                comparator = Comparator.comparing(Produto::getPreco);
+                break;
+            case "name":
+            default:
+                comparator = Comparator.comparing(Produto::getNome);
+                break;
+        }
+
+        if ("desc".equalsIgnoreCase(order)) {
+            comparator = comparator.reversed();
+        }
+
+        return produtos.stream().sorted(comparator).collect(Collectors.toList());
     }
-    
 }
